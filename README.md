@@ -14,4 +14,4 @@ Our idea is to solve this problem by creating a USSD based messaging service whi
 2. The relief forces are able to show recent updates/location of relief camps to the victim.
 3. This will find the most efficient location in which it can serve all the locations within the city once emergency happens. 
 4. Generating the Evacuation Routes during Disaster occurence.
-![alt text](./images/flowchart.png)
+![flowchart](./images/flowchart.png)
