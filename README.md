@@ -1,5 +1,5 @@
 # Brahmastra
-
+This is an idea for the Microsoft Code Fun Do
 ## Problem
 During disaster the communication between the relief forces and victims become a major problem due to low network connectivity. 
 Also many lives are lost due to lack of proper evacuation and placement of the relief camp.
@@ -14,3 +14,4 @@ Our idea is to solve this problem by creating a USSD based messaging service whi
 2. The relief forces are able to show recent updates/location of relief camps to the victim.
 3. This will find the most efficient location in which it can serve all the locations within the city once emergency happens. 
 4. Generating the Evacuation Routes during Disaster occurence.
+![alt text](./images/flowchart.png)
