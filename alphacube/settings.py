@@ -25,7 +25,9 @@ SECRET_KEY = '5qab3qehl-*8!8$_i106_)xse28wm9e7$^-xws#at4l9axf+-s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'alphacube.azurewebsites.net',
+]
 
 
 # Application definition
