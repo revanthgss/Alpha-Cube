@@ -21,7 +21,7 @@ def index(request):
 
 
         elif text == "1":
-            response = "Your response has been recorded.\n"
+            response = "END Your response has been recorded.\n"
             response += "A relief team will soon approach you" 
         return HttpResponse(response)
     else:
