@@ -15,14 +15,14 @@ def index(request):
         response = ""
         
         if text == "":
-            response = "CON What would you want to check \n"
-            response += "1. My Phone Number"
+            response = "CON What do you want to do \n"
+            response += "1. Ask for support\n"
+            response += "2. Get Updates"
 
 
         elif text == "1":
-            response = "END My Phone number is {0}".format(phone_number)
-        
-        print(response)
+            response = "Your response has been recorded.\n"
+            response += "A relief team will soon approach you" 
         return HttpResponse(response)
     else:
         return HttpResponse("Response can't be made")
