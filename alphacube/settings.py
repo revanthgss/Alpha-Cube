@@ -26,7 +26,9 @@ SECRET_KEY = '5qab3qehl-*8!8$_i106_)xse28wm9e7$^-xws#at4l9axf+-s'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'f9270761.ngrok.io',
     'alphacube.azurewebsites.net',
+    '127.0.0.1',
 ]
 
 
