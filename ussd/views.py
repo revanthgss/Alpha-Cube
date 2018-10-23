@@ -1,8 +1,14 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from .models import Victim
+import random
+
 
 # Create your views here.
-
+LAT_START = 9437046
+LAT_END = 9561080
+LON_START = 76334586
+LON_END = 76350965
 
 @csrf_exempt
 def index(request):
@@ -21,6 +27,10 @@ def index(request):
 
 
         elif text == "1":
+            lat=(random.randint(LAT_START,LAT_END))/1000000
+            lon=(random.randint(LON_START,LON_END))/1000000
+            victim = Victim(phone_number=phone_number, lat=lat, lon=lon)
+            victim.save()
             response = "END Your response has been recorded.\n"
             response += "A relief team will soon approach you" 
         return HttpResponse(response)
