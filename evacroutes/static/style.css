@@ -1,0 +1,22 @@
+#tooltip{
+    background-color:white;
+    z-index: 1000;
+    transform: translateY(-5px);
+    height:80px;
+    width:120px;
+    padding:5px;
+    text-align:center;
+    border: solid 1px black;
+    border-radius: 5px;
+}
+
+#heatmap{
+    background-color: #ac7208;
+    color: white;
+    border: solid 1px orange;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #ccc;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
