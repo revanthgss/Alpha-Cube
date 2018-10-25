@@ -5,7 +5,8 @@ function GetMap() {
     map = new Microsoft.Maps.Map('#myMap', {
         credentials: 'Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ',
         center: new Microsoft.Maps.Location(10.453101, 76.580074),
-        zoom: 7
+        zoom: 7,
+        mapTypeId: Microsoft.Maps.MapTypeId.aerial,
     });
     tooltipTemplate = `<div id="tooltip"><p><b>{title}</b></p><p>{time}</p></div>`;
     //Create an infobox to use as a tooltip when hovering.
