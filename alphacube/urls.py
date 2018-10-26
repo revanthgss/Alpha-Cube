@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+from evacroutes.views import home
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('ussd.urls')),
+    url(r'^$',home, name='home'),
     url(r'', include('evacroutes.urls')),
 ]

@@ -10,13 +10,43 @@
     border-radius: 5px;
 }
 
-#heatmap{
-    background-color: #ac7208;
-    color: white;
-    border: solid 1px orange;
+#title{
+    font-size: 2.5em;
+    margin: 10px auto;
+}
+
+button{
+    background-color: white;
+    width: 150px;
+    height: 50px;
+    color: black;
+    border: solid 1px black;
     border-radius: 5px;
-    box-shadow: 3px 3px 3px #ccc;
+    box-shadow: 3px 3px 3px #444;
     margin: 5px;
     padding: 5px;
     cursor: pointer;
+}
+
+button a{
+    color: black;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: white;
+    width:80%;
+    margin: 50px auto;
+    max-width: 700px;
+    justify-content: center;
+}
+
+#map{
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 }
