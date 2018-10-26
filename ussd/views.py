@@ -20,8 +20,8 @@ def index(request):
         response = ""
         
         if text == "":
-            response = "CON What do you want to do<br>"
-            response += "1. Ask for support<br>"
+            response = "CON What do you want to do\n"
+            response += "1. Ask for support\n"
             response += "2. Get Updates"
 
 
@@ -30,7 +30,7 @@ def index(request):
             lon=(random.randint(LON_START,LON_END))/1000000
             victim = Victim(phone_number=phone_number, lat=lat, lon=lon)
             victim.save()
-            response = "END Your response has been recorded.<br>"
+            response = "END Your response has been recorded.\n"
             response += "A relief team will soon approach you" 
 
         elif text == "2":
@@ -39,7 +39,7 @@ def index(request):
             response = "END 1. "
             response += updateslist[len(updateslist)-1].message
             if(len(updateslist)>1):
-                response += "<br> 2. "+updateslist[len(updateslist)-2].message
+                response += "\n 2. "+updateslist[len(updateslist)-2].message
             print(response)
 
         return HttpResponse(response)
