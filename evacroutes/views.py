@@ -22,6 +22,6 @@ def post(request):
         u = request.POST.get('update')
         update = Update(message = u)
         update.save()
-        return HttpResponse("Success")
+        return render()
     else:
         return HttpResponse("Fail")
