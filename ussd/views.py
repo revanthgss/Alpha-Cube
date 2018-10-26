@@ -25,8 +25,8 @@ def index(request):
 
 
         elif text == "1":
-            lat = random.randrange(LAT_START,LAT_END)
-            lon = random.randrange(LON_START,LON_END)
+            lat=(random.randint(LAT_START,LAT_END))/1000000
+            lon=(random.randint(LON_START,LON_END))/1000000
             victim = Victim(phone_number=phone_number, lat=lat, lon=lon)
             victim.save()
             response = "END Your response has been recorded.\n"
