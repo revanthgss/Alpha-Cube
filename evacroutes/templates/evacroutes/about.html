@@ -3,6 +3,7 @@
 <title>About Page</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{% load staticfiles %}
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
@@ -30,7 +31,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     </div>
 
     <div class="w3-third w3-center">
-      <img src="signal.png" alt="signal" height="400" width="350">
+      <img src="{% static 'signal.png' %}" alt="signal" height="400" width="350">
     </div>
   </div>
 </div>
@@ -64,7 +65,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     </div>
 
     <div class="w3-third w3-center">
-      <img src="manual1.png" alt="signal" height="350" width="300">
+      <img src="{% static 'manual1.png' %}" alt="signal" height="350" width="300">
     </div>
   </div>
 </div>
@@ -78,7 +79,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     </div>
 
     <div class="w3-third w3-center">
-      <img src="press1.png" alt="signal" height="300" width="250">
+      <img src="{% static 'press1.png' %}" alt="signal" height="300" width="250">
     </div>
   </div>
 </div>
@@ -93,7 +94,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     </div>
 
     <div class="w3-third w3-center">
-      <img src="update.jpg" alt="signal" height="300" width="300">
+      <img src="{% static 'update.jpg' %}" alt="signal" height="300" width="300">
     </div>
   </div>
 </div>

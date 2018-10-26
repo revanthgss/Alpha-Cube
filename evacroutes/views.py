@@ -22,6 +22,9 @@ def post(request):
         u = request.POST.get('update')
         update = Update(message = u)
         update.save()
-        return render()
+        return HttpResponse("Success")
     else:
         return HttpResponse("Fail")
+
+def about(request):
+    return render(request, 'evacroutes/about.html')
