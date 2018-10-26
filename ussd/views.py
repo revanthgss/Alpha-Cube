@@ -2,15 +2,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .models import Victim
 import random
-from shapely.geometry import Point,Polygon
 
-def generate_random():
-    polygon = Polygon([(8.336403, 77.151127), (11.064461, 76.700373), (11.952782, 75.806202)])
-    minx, miny, maxx, maxy = polygon.bounds
-    while True:
-        pnt = Point(random.uniform(minx, maxx), random.uniform(miny, maxy))
-        if polygon.contains(pnt):
-            return pnt.x,pnt.y
+LAT_END = 11260864
+LAT_START = 8682914
+LON_START = 75782874
+LON_END = 76948055
 
 @csrf_exempt
 def index(request):
@@ -29,7 +25,8 @@ def index(request):
 
 
         elif text == "1":
-            lat,lon = generate_random()
+            lat = random.randrange(LAT_START,LAT_END)
+            lon = random.randrange(LON_START,LON_END)
             victim = Victim(phone_number=phone_number, lat=lat, lon=lon)
             victim.save()
             response = "END Your response has been recorded.\n"

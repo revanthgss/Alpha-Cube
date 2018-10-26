@@ -6,4 +6,4 @@ from datetime import datetime
 def index(request):
     victims = Victim.objects.all()
     presenttime = datetime.now()
-    return render(request, 'evacroutes/map.html', {'victims':list(victims),'present':presenttime})
+    return render(request, 'evacroutes/map.html', {'victims':list(victims)})

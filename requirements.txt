@@ -1,6 +1,4 @@
 django
-GEOS
-shapely
 setuptools
 pyodbc>3.0
 django-pyodbc-azure==1.10.0.1
