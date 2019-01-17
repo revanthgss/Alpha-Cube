@@ -2,12 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .models import Victim
 from evacroutes.models import Update
-import random
-
-LAT_END = 11260864
-LAT_START = 8682914
-LON_START = 75782874
-LON_END = 76948055
+import requests
 
 @csrf_exempt
 def index(request):
@@ -26,12 +21,9 @@ def index(request):
 
 
         elif text == "1":
-            lat=(random.randint(LAT_START,LAT_END))/1000000
-            lon=(random.randint(LON_START,LON_END))/1000000
-            victim = Victim(phone_number=phone_number, lat=lat, lon=lon)
-            victim.save()
-            response = "END Your response has been recorded.\n"
-            response += "A relief team will soon approach you" 
+            response = "END Please send the nearest\n"
+            response += "landmark to 83626 via SMS\n"
+            response += "along with your pincode"
 
         elif text == "2":
             updates = Update.objects.order_by('time')
@@ -45,3 +37,21 @@ def index(request):
         return HttpResponse(response)
     else:
         return HttpResponse("Response can't be made")
+
+@csrf_exempt
+def sms(request):
+    if request.method == 'POST':
+        phone_number = request.POST.get('from')
+        to = request.POST.get('to')
+        text = request.POST.get('text')
+        date = request.POST.get('date')
+        id = request.POST.get('id')
+
+        query=text.replace(' ', '%20')
+        key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
+        url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
+        result=requests.get(url)
+        result=result.json()
+        lat,lng=result['resourceSets'][0]['resources'][0]['point']['coordinates']
+        victim=Victim(phone_number=phone_number,lat=lat,lng=lng)
+        victim.save()

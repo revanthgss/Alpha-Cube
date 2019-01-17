@@ -1,3 +1,4 @@
+requests
 django
 setuptools
 pyodbc>3.0
