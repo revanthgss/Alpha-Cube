@@ -22,7 +22,10 @@ def index(request):
                 response += "2. Get Updates"
 
             elif text == "1":
-                victim.rescued=False
+                print(list(victim)[0].rescued)
+                list(victim)[0].setRescued(False)
+                print(list(victim)[0].rescued)
+                list(victim)[0].save()
                 response = "END Your response has been recorded\n"
                 response += "A response team will soon\n"
                 response += "approach you."
