@@ -32,7 +32,6 @@ function GetMap() {
         let lon = victim.querySelector('.lon').textContent;
         let time = victim.querySelector('.time').textContent+" ago";
         let location = new Microsoft.Maps.Location(lat,lon);
-        console.log(lat,lon);
         locs.push(location);
         //Create custom Pushpin
 

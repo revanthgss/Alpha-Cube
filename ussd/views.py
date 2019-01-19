@@ -14,25 +14,30 @@ def index(request):
 
         response = ""
         
-        if text == "":
-            response = "CON What do you want to do\n"
-            response += "1. Ask for support\n"
-            response += "2. Get Updates"
+        victim = Victim.objects.filter(phone_number=phone_number)
+        if(victim):
+            if text == "":
+                response = "CON What do you want to do\n"
+                response += "1. Ask for support\n"
+                response += "2. Get Updates"
 
+            elif text == "1":
+                response = "END Your response has been recorded\n"
+                response += "A response team will soon\n"
+                response += "approach you."
 
-        elif text == "1":
+            elif text == "2":
+                updates = Update.objects.order_by('time')
+                updateslist = list(updates)
+                response = "END 1. "
+                response += updateslist[len(updateslist)-1].message
+                if(len(updateslist)>1):
+                    response += "\n 2. "+updateslist[len(updateslist)-2].message
+
+        else:
             response = "END Please send the nearest\n"
             response += "landmark to 83626 via SMS\n"
             response += "along with your pincode"
-
-        elif text == "2":
-            updates = Update.objects.order_by('time')
-            updateslist = list(updates)
-            response = "END 1. "
-            response += updateslist[len(updateslist)-1].message
-            if(len(updateslist)>1):
-                response += "\n 2. "+updateslist[len(updateslist)-2].message
-            print(response)
 
         return HttpResponse(response)
     else:
@@ -52,6 +57,7 @@ def sms(request):
         url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
         result=requests.get(url)
         result=result.json()
-        lat,lng=result['resourceSets'][0]['resources'][0]['point']['coordinates']
-        victim=Victim(phone_number=phone_number,lat=lat,lng=lng)
+        lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
+        victim=Victim(phone_number=phone_number,lat=lat,lon=lon)
         victim.save()
+        return HttpResponse("Success")
