@@ -22,6 +22,7 @@ def index(request):
                 response += "2. Get Updates"
 
             elif text == "1":
+                victim.rescued=False
                 response = "END Your response has been recorded\n"
                 response += "A response team will soon\n"
                 response += "approach you."
@@ -36,7 +37,7 @@ def index(request):
 
         else:
             response = "END Please send the nearest\n"
-            response += "landmark to 83626 via SMS\n"
+            response += "landmark to 86386 via SMS\n"
             response += "along with your pincode"
 
         return HttpResponse(response)
@@ -58,6 +59,6 @@ def sms(request):
         result=requests.get(url)
         result=result.json()
         lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
-        victim=Victim(phone_number=phone_number,lat=lat,lon=lon)
+        victim=Victim(phone_number=phone_number,lat=lat,lon=lon,rescued=True)
         victim.save()
         return HttpResponse("Success")

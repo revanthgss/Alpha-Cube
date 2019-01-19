@@ -7,7 +7,7 @@ from .models import Update
 
 # Create your views here.
 def index(request):
-    victims = Victim.objects.all()
+    victims = Victim.objects.filter(rescued=False)
     return render(request, 'evacroutes/map.html', {'victims':list(victims)})
 
 def home(request):
