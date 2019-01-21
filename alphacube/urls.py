@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'', include('ussd.urls')),
     url(r'^$',home, name='home'),
     url(r'', include('evacroutes.urls')),
+    url(r'', include('rescue.urls')),
 ]
