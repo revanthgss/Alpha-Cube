@@ -14,4 +14,4 @@ class ProfileImageView(FormView):
         profile_image.save()
         self.id = profile_image.id
 
-        return HttpResponse('File Uploaded') your views here.
+        return HttpResponse('File Uploaded')
