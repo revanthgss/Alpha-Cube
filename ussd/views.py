@@ -54,17 +54,17 @@ def sms(request):
         result=requests.get(url)
         result=result.json()
         lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
-        if to==86386:
+        if to=="86386":
             victim=Victim(phone_number=fro,lat=lat,lon=lon,rescued=True)
             victim.save()
-        elif to==86387 and text[:5]=="ALERT":
+        elif to=="86387" and text[:5]=="ALERT":
             victims=Victim.objects.filter(phone_number!=fro)
             recipients=[victim.phone_number for victim in list(victims)]
             volunteers=Volunteer.objects.filter(phone_number!=fro)
             recipients.extend([volunteers.phone_number for volunteer in list(volunteers)])
             message=text[5:]
             SMS.send_sms_sync(recipients=recipients,message=message)
-        elif to==86387:
+        elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
             volunteer.save()
         return HttpResponse("Success")
