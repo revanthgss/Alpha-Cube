@@ -26,7 +26,7 @@ def ussdrelief(request):
             #     #TODO: Add the code needed to show the victims here
 
             elif text == "2":
-                response = "CON Send the alert via SMS to\n"
+                response = "END Send the alert via SMS to\n"
                 response+="86387 as\n"
                 response+="ALERT <text>"
 
@@ -63,7 +63,7 @@ def sms(request):
             volunteers=Volunteer.objects.filter(phone_number!=fro)
             recipients.extend([volunteers.phone_number for volunteer in list(volunteers)])
             message=text[5:]
-            SMS.send_sms_sync(recipients=recipients,message=message)
+            SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
             volunteer.save()
@@ -104,7 +104,7 @@ def index(request):
                 if(len(updateslist)>1):
                     response += "\n 2. "+updateslist[len(updateslist)-2].message
             elif text == "3":
-                response = "CON Send the alert via SMS to\n"
+                response = "END Send the alert via SMS to\n"
                 response+="86387 as\n"
                 response+="ALERT <text>"
 
