@@ -47,7 +47,7 @@ def sms(request):
         text = request.POST.get('text')
         date = request.POST.get('date')
         id = request.POST.get('id')
-
+        print(to)
         query=text.replace(' ', '%20')
         key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
         url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
@@ -58,12 +58,14 @@ def sms(request):
             victim=Victim(phone_number=fro,lat=lat,lon=lon,rescued=True)
             victim.save()
         elif to=="86387" and text[:5]=="ALERT":
-            victims=Victim.objects.filter(phone_number!=fro)
-            recipients=[victim.phone_number for victim in list(victims)]
-            volunteers=Volunteer.objects.filter(phone_number!=fro)
-            recipients.extend([volunteers.phone_number for volunteer in list(volunteers)])
-            message=text[5:]
-            SMS().send_sms_sync(recipients=recipients,message=message)
+            victims=Victim.objects.exclude(phone_number=fro)
+            recipients=["+"+str(victim.phone_number) for victim in list(victims)]
+            volunteers=Volunteer.objects.exclude(phone_number=fro)
+            recipients.extend(["+"+str(volunteers.phone_number) for volunteer in list(volunteers)])
+            message=text[6:]
+            print(recipients)
+            print(message)
+            SMS().send_sms_sync(recipients=recipients,message=str(message))
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
             volunteer.save()
