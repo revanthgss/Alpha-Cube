@@ -22,8 +22,14 @@ def ussdrelief(request):
                 response += "1. Show Victims\n"
                 response += "2. Send an alert"
 
-            # elif text == "1":
-            #     #TODO: Add the code needed to show the victims here
+            elif text == "1":
+                #TODO: Add the code needed to show the victims here
+                volunteer=list(volunteer)[0]
+                query="SELECT *, COUNT(*) AS count FROM ussd_victim GROUP BY location"
+                victims=Victim.objects.raw(query)
+                victims=list(victims)
+                for i in range(len(victims)):
+                    response+=victims[i].location+" "+str(victims[i].count)+"\n"
 
             elif text == "2":
                 response = "END Send the alert via SMS to\n"

@@ -6,6 +6,7 @@ class Victim(models.Model):
     reported_date = models.DateTimeField(default = timezone.now)
     lat = models.DecimalField(max_digits=10,decimal_places=6)
     lon = models.DecimalField(max_digits=10,decimal_places=6)
+    location=models.TextField(max_length=100)
     rescued = models.BooleanField(default=False)
 
     def setRescued(self, val):
