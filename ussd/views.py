@@ -118,3 +118,8 @@ def index(request):
         return HttpResponse(response)
     else:
         return HttpResponse("Response can't be made")
+
+def data(request):
+    victims = []
+    victims = Victim.objects.all()
+    return render(request, 'ussd/display.html', {'victims': victims})
