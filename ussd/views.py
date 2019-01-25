@@ -20,7 +20,8 @@ def ussdrelief(request):
             if text == "":
                 response = "CON What do you want to do\n"
                 response += "1. Show Victims\n"
-                response += "2. Send an alert"
+                response += "2. Send an alert\n"
+                response += "3. Show Volunteer/Shelter locations\n"
 
             elif text == "1":
                 #TODO: Add the code needed to show the victims here
@@ -35,6 +36,15 @@ def ussdrelief(request):
                 response = "END Send the alert via SMS to\n"
                 response+="86387 as\n"
                 response+="ALERT <text>"
+
+            elif text == "3":
+                volunteers = Volunteer.objects.all()
+                volunteers = list(volunteers)
+                response += "END"
+                for i in range(len(volunteers)):
+                    response += str(i+1)+". "+volunteers[i].location+"\n"
+            elif text == "4":
+                response = "END asjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdv"
 
         else:
             response = "END Please send the nearest\n"
