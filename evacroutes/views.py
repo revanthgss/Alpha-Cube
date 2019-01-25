@@ -28,3 +28,9 @@ def post(request):
 
 def about(request):
     return render(request, 'evacroutes/about.html')
+
+
+def data(request):
+    victims = []
+    victims = Victim.objects.all()
+    return render(request, 'evacroutes/display.html', {'victims': victims})

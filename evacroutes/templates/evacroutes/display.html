@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <title>Data</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body bgcolor = 'white'>
+    <table>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Location</th>
+                <th>Rescued</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for victim in victims %}
+            <tr>
+                <td>{{ victim.phone_number }}</td>
+                <td>{{ victim.location }}</td>
+                <td><input type="checkbox" name="rescued" id="rescued"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

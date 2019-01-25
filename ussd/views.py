@@ -69,8 +69,6 @@ def sms(request):
             volunteers=Volunteer.objects.exclude(phone_number=fro)
             recipients.extend(["+"+str(volunteers.phone_number) for volunteer in list(volunteers)])
             message=text[6:]
-            print(recipients)
-            print(message)
             SMS().send_sms_sync(recipients=recipients,message=str(message))
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
@@ -124,8 +122,3 @@ def index(request):
         return HttpResponse(response)
     else:
         return HttpResponse("Response can't be made")
-
-def data(request):
-    victims = []
-    victims = Victim.objects.all()
-    return render(request, 'ussd/display.html', {'victims': victims})
