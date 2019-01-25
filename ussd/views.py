@@ -40,7 +40,7 @@ def ussdrelief(request):
             elif text == "3":
                 volunteers = Volunteer.objects.all()
                 volunteers = list(volunteers)
-                response += "END"
+                response += "END "
                 for i in range(len(volunteers)):
                     response += str(i+1)+". "+volunteers[i].location+"\n"
             elif text == "4":
