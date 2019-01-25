@@ -22,10 +22,22 @@
             <tr>
                 <td>{{ victim.phone_number }}</td>
                 <td>{{ victim.location }}</td>
-                <td><input type="checkbox" name="rescued" id="rescued"></td>
+                <td><input type="checkbox" name="rescued" id="rescued" {% if victim.rescued %}checked{% endif %}></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <script>
+        var checkbox = el.getElementsByTagName('input');
+
+        // assign function to onclick property of each checkbox
+        for (var i=0, len=checkbox.length; i<len; i++) {
+            if ( checkbox[i].type === 'checkbox' ) {
+                checkbox[i].onclick = function(e) {
+                    
+                }
+            }
+        }
+    </script>
 </body>
 </html>
