@@ -77,13 +77,13 @@ def sms(request):
         text = request.POST.get('text')
         date = request.POST.get('date')
         id = request.POST.get('id')
-        print(to)
-        query=text.replace(' ', '%20')
-        key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
-        url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
-        result=requests.get(url)
-        result=result.json()
-        lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
+        if text[:5]!="ALERT" and text[:4]!="HELP":
+            query=text.replace(' ', '%20')
+            key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
+            url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
+            result=requests.get(url)
+            result=result.json()
+            lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
         if to=="86386":
             victim=Victim.objects.filter(phone_number=fro)
             if(victim):
@@ -95,18 +95,20 @@ def sms(request):
             victim.assign(volunteer=volunteer)
             victim.save()
             recipients=["+"+str(victim.phone_number)]
-            message="You have been assigned volunteer at "+volunteer.location+". For help, send \"HELP message\" to 86387"
+            message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387"
             SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
             volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
             victims=Victim.objects.filter(volunteer=volunteer)
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
             message=text[6:]
+            message+= "\n- "+str(volunteer.phone_number)
             SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:4]=="HELP":
             victim=list(Victim.objects.filter(phone_number=fro))[0]
             recipients=["+"+str(victim.volunteer.phone_number)]
             message=text[5:]
+            message+= "\n- "+str(victim.phone_number)
             SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
