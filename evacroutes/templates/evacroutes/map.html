@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Map</title>
+    <title>Victim</title>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script type='text/javascript'
             src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap'
             async defer></script>
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <style>
-        body{
-            background-image: url( "{% static 'tile.jpg' %}");
-        }
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">BRAHMASTRA</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/about">HOME</a></li>
+      <li class="active"><a href="/victim">VICTIM</a></li>
+      <li><a href="#" style = "text-align: right;">POST UPDATE</a></li>
+      <li><a href="/about" style = "text-align: right;">ALPHA CUBE</a></li>
+    </ul>
+  </div>
+</nav>
     <div id="content" hidden>
         {% for victim in victims %}
             <div class="victim">
@@ -26,10 +39,15 @@
             </div>
         {% endfor %}
     </div>
-    <div id="myMap"></div>
-    <div class="container">
-        <div><button id="heatmap">Toggle heatmap</button></div>
-    </div>
+    <div id="container" style="width:100%;">                                   
+        <div id="left" style="float:left; width:75%;">
+            <div id="myMap"></div>
+            <div class="container" style="float:left;">
+                <div><button id="heatmap" class="btn btn-warning" style="float:left;">Toggle heatmap</button></div>
+            </div>
+        </div>                
+        <div id="right" style="float:right; width:25%;"> This is right panel </div>   
+    </div>                
     <script type='text/javascript' src="{% static 'map.js' %}"></script>
 </body>
 </html>
