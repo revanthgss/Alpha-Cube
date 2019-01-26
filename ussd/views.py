@@ -28,12 +28,14 @@ def ussdrelief(request):
 
             elif text[0] == '1':
                 textlist=text.split('*')
-                idx=textlist.count('1')-textlist.count('0')
-                if(victims)
-                    if(text[-1]==5):
+                idx=textlist.count('1')-textlist.count('0')-1
+                print(textlist)
+                if(victims):
+                    if text[-1]=='5':
                         victims[idx].setRescued(True)
                         victims[idx].save()
                         response+="END Success"
+                        return HttpResponse(response)
                     if idx==len(victims):
                         response+="END The list has ended\n"
                     elif idx==len(victims)-1:
@@ -41,6 +43,8 @@ def ussdrelief(request):
                     else:
                         response+="CON "
                     if idx!=len(victims):
+                        response+=str(victims[idx].phone_number)
+                        response+=" "
                         response+=victims[idx].location
                         response+="\nPress 5 to indicate victim has rescued\n"
                         if idx!=len(victims)-1:
@@ -91,7 +95,7 @@ def sms(request):
             victim.assign(volunteer=volunteer)
             victim.save()
             recipients=["+"+str(victim.phone_number)]
-            message="You have been assigned volunteer at "+volunteer.location+". For help, send HELP message to 86387"
+            message="You have been assigned volunteer at "+volunteer.location+". For help, send \"HELP message\" to 86387"
             SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
             volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
@@ -161,20 +165,23 @@ def index(request):
                     response+="Press 1 for next\n"
                 if idx!=0:
                     response+="Press 0 for back\n"
-            elif text == "3":
-                response += "CON "
-                volunteers=sortlocations(victim.lat,victim.lon,list(Volunteers.objects.all()))
+            elif text[0] == "3":
+                volunteers=sortlocations(victim.lat,victim.lon,list(Volunteer.objects.all()))
                 textlist=text.split('*')
                 idx=textlist.count('9')-textlist.count('7')
-                if(text[-1]==5):
+                if text[-1]=='5':
+                    print("hello")
                     victim.assign(volunteers[idx])
                     response+="END You have been assigned\n"
                     response+="volunteer at "+volunteers[idx].location+". You can ask\n"
                     response+="for help by sending HELP message\n"
                     response+="to 86387\n"
+                    return HttpResponse(response)
                 else:
                     response+="CON "
                 if idx!=len(volunteers):
+                    response+=str(volunteers[idx].phone_number)
+                    response+=" "
                     response+=volunteers[idx].location
                     response+="\nPress 5 to ask help or reach the shelter\n"
                     if idx!=len(volunteers)-1:
