@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .utilities.SMS import SMS
+from .utilities.location import sortlocations
 from .models import Victim, Volunteer
 from evacroutes.models import Update
 import requests
@@ -16,35 +17,41 @@ def ussdrelief(request):
         response = ""
         
         volunteer = Volunteer.objects.filter(phone_number=phone_number)
+        volunteer = list(volunteer)[0]
         if(volunteer):
+            victims=Victim.objects.filter(volunteer=volunteer)
+            victims = list(victims)
             if text == "":
                 response = "CON What do you want to do\n"
-                response += "1. Show Victims\n"
+                response += "1. List people in need\n"
                 response += "2. Send an alert\n"
-                response += "3. Show Volunteer/Shelter locations\n"
 
-            elif text == "1":
-                #TODO: Add the code needed to show the victims here
-                volunteer=list(volunteer)[0]
-                query="SELECT *, COUNT(*) AS count FROM ussd_victim GROUP BY location"
-                victims=Victim.objects.raw(query)
-                victims=list(victims)
-                for i in range(len(victims)):
-                    response+=victims[i].location+" "+str(victims[i].count)+"\n"
+            elif text[0] == '1':
+                textlist=text.split('*')
+                idx=textlist.count('1')-textlist.count('0')
+                if(text[-1]==5):
+                    victims[idx].setRescued(True)
+                    victims[idx].save()
+                    idx+=1
+                if idx==len(victims):
+                    response+="END The list has ended\n"
+                elif idx==len(victims)-1:
+                    response+="END "
+                else:
+                    response+="CON "
+                if idx!=len(victims):
+                    response+=victims[idx].location
+                    response+="\nPress 5 to indicate victim has rescued\n"
+                    if idx!=len(victims)-1:
+                        response+="Press 1 to for next\n"
+                    if idx!=0:
+                        response+="Press 0 to for back\n"
+                
 
             elif text == "2":
                 response = "END Send the alert via SMS to\n"
                 response+="86387 as\n"
-                response+="ALERT <text>"
-
-            elif text == "3":
-                volunteers = Volunteer.objects.all()
-                volunteers = list(volunteers)
-                response += "END "
-                for i in range(len(volunteers)):
-                    response += str(i+1)+". "+volunteers[i].location+"\n"
-            elif text == "4":
-                response = "END asjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdvasjdfcnadcakjsdbckajjsdbcjbasdbakjsbdv"
+                response+="ALERT text"
 
         else:
             response = "END Please send the nearest\n"
@@ -71,15 +78,29 @@ def sms(request):
         result=result.json()
         lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
         if to=="86386":
-            victim=Victim(phone_number=fro,lat=lat,lon=lon,rescued=True)
+            victim=Victim.objects.filter(phone_number=fro)
+            if(victim):
+                victim=list(victim)[0]
+                victim.updateLocation(lat,lon,text)
+            else:
+                victim=Victim(phone_number=fro,lat=lat,lon=lon,location=text,rescued=True)
+            volunteer=sortlocations(victim.lat,victim.lon,list(Volunteer.objects.all()))[0]
+            victim.assign(volunteer=volunteer)
             victim.save()
+            recipients=["+"+str(victim.phone_number)]
+            message="You have been assigned volunteer at "+volunteer.location+". For help, send HELP message to 86387"
+            SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
-            victims=Victim.objects.exclude(phone_number=fro)
+            volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
+            victims=Victim.objects.filter(volunteer=volunteer)
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
-            volunteers=Volunteer.objects.exclude(phone_number=fro)
-            recipients.extend(["+"+str(volunteers.phone_number) for volunteer in list(volunteers)])
             message=text[6:]
-            SMS().send_sms_sync(recipients=recipients,message=str(message))
+            SMS().send_sms_sync(recipients=recipients,message=message)
+        elif to=="86387" and text[:4]=="HELP":
+            victim=list(Victim.objects.filter(phone_number=fro))[0]
+            recipients=["+"+str(victim.volunteer.phone_number)]
+            message=text[5:]
+            SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
             volunteer.save()
@@ -97,32 +118,66 @@ def index(request):
         
         victim = Victim.objects.filter(phone_number=phone_number)
         if(victim):
+            victim=list(victim)[0]
+            updates = Update.objects.order_by('time')
+            updateslist = list(updates)
             if text == "":
                 response = "CON What do you want to do\n"
                 response += "1. Ask for support\n"
-                response += "2. Get Updates\n"
-                response += "3. Send info to all people"
+                response += "2. Latest news\n"
+                response += "3. Reach a Shelter\n"
 
             elif text == "1":
-                print(list(victim)[0].rescued)
-                list(victim)[0].setRescued(False)
-                print(list(victim)[0].rescued)
-                list(victim)[0].save()
-                response = "END Your response has been recorded\n"
-                response += "A response team will soon\n"
-                response += "approach you."
+                victim.setRescued(False)
+                victim.save()
+                response += "CON Dont worry. Stay Strong\n"
+                response+="Our response team will soon be there for you\n"
+                response+="1.Update your Location\n"
+                response += "2.Cancel request for help"
 
-            elif text == "2":
-                updates = Update.objects.order_by('time')
-                updateslist = list(updates)
-                response = "END 1. "
-                response += updateslist[len(updateslist)-1].message
-                if(len(updateslist)>1):
-                    response += "\n 2. "+updateslist[len(updateslist)-2].message
+            elif text == "1*1":
+                response = "END Please send the new\n"
+                response += "landmark to 86386 via SMS\n"
+                response += "along with your pincode"
+            
+            elif text == "1*2":
+                victim.save()
+                victim.setRescued(True)
+                response += "END We are glad that you safe now\n"
+
+            elif text[0] == '2':
+                textlist=text.split('*')
+                idx=textlist.count('1')-textlist.count('0')
+                if idx==len(updates)-1:
+                    response+="END "
+                else:
+                    response+="CON "
+                response+=updateslist[idx].message
+                response+="\n"
+                if idx!=len(updates)-1:
+                    response+="Press 1 for next\n"
+                if idx!=0:
+                    response+="Press 0 for back\n"
             elif text == "3":
-                response = "END Send the alert via SMS to\n"
-                response+="86387 as\n"
-                response+="ALERT <text>"
+                response += "CON "
+                volunteers=sortlocations(victim.lat,victim.lon,list(Volunteers.objects.all()))
+                textlist=text.split('*')
+                idx=textlist.count('9')-textlist.count('7')
+                if(text[-1]==5):
+                    victim.assign(volunteers[idx])
+                    response+="END You have been assigned\n"
+                    response+="volunteer at "+volunteers[idx].location+". You can ask\n"
+                    response+="for help by sending HELP message\n"
+                    response+="to 86387\n"
+                else:
+                    response+="CON "
+                if idx!=len(volunteers):
+                    response+=volunteers[idx].location
+                    response+="\nPress 5 to ask help or reach the shelter\n"
+                    if idx!=len(volunteers)-1:
+                        response+="Press 9 for next\n"
+                    if idx!=0:
+                        response+="Press 7 for back\n"
 
         else:
             response = "END Please send the nearest\n"
