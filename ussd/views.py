@@ -29,23 +29,26 @@ def ussdrelief(request):
             elif text[0] == '1':
                 textlist=text.split('*')
                 idx=textlist.count('1')-textlist.count('0')
-                if(text[-1]==5):
-                    victims[idx].setRescued(True)
-                    victims[idx].save()
-                    idx+=1
-                if idx==len(victims):
-                    response+="END The list has ended\n"
-                elif idx==len(victims)-1:
-                    response+="END "
+                if(victims)
+                    if(text[-1]==5):
+                        victims[idx].setRescued(True)
+                        victims[idx].save()
+                        response+="END Success"
+                    if idx==len(victims):
+                        response+="END The list has ended\n"
+                    elif idx==len(victims)-1:
+                        response+="END "
+                    else:
+                        response+="CON "
+                    if idx!=len(victims):
+                        response+=victims[idx].location
+                        response+="\nPress 5 to indicate victim has rescued\n"
+                        if idx!=len(victims)-1:
+                            response+="Press 1 to for next\n"
+                        if idx!=0:
+                            response+="Press 0 to for back\n"
                 else:
-                    response+="CON "
-                if idx!=len(victims):
-                    response+=victims[idx].location
-                    response+="\nPress 5 to indicate victim has rescued\n"
-                    if idx!=len(victims)-1:
-                        response+="Press 1 to for next\n"
-                    if idx!=0:
-                        response+="Press 0 to for back\n"
+                    response+="END No nearby victim"
                 
 
             elif text == "2":
