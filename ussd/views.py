@@ -17,8 +17,8 @@ def ussdrelief(request):
         response = ""
         
         volunteer = Volunteer.objects.filter(phone_number=phone_number)
-        volunteer = list(volunteer)[0]
         if(volunteer):
+            volunteer = list(volunteer)[0]
             victims=Victim.objects.filter(volunteer=volunteer)
             victims = list(victims)
             if text == "":
