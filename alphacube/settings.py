@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ussd',
     'evacroutes',
-    'rescue',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +127,4 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 STATIC_ROOT = 'static'
+APPEND_SLASH = False

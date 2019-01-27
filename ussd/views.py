@@ -19,7 +19,7 @@ def ussdrelief(request):
         volunteer = Volunteer.objects.filter(phone_number=phone_number)
         if(volunteer):
             volunteer = list(volunteer)[0]
-            victims=Victim.objects.filter(volunteer=volunteer)
+            victims=Victim.objects.filter(volunteer=volunteer).filter(rescued=False)
             victims = list(victims)
             if text == "":
                 response = "CON What do you want to do\n"
@@ -90,7 +90,7 @@ def sms(request):
                 victim=list(victim)[0]
                 victim.updateLocation(lat,lon,text)
             else:
-                victim=Victim(phone_number=fro,lat=lat,lon=lon,location=text,rescued=True)
+                victim=Victim(phone_number=fro,lat=lat,lon=lon,location=text,rescued=False)
             volunteer=sortlocations(victim.lat,victim.lon,list(Volunteer.objects.all()))[0]
             victim.assign(volunteer=volunteer)
             victim.save()
@@ -103,7 +103,6 @@ def sms(request):
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
             message=text[6:]
             message+= "\n- "+str(volunteer.phone_number)
-            SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:4]=="HELP":
             victim=list(Victim.objects.filter(phone_number=fro))[0]
             recipients=["+"+str(victim.volunteer.phone_number)]
@@ -133,8 +132,7 @@ def index(request):
             if text == "":
                 response = "CON What do you want to do\n"
                 response += "1. Ask for support\n"
-                response += "2. Latest news\n"
-                response += "3. Reach a Shelter\n"
+                response += "2. Reach a Shelter\n"
 
             elif text == "1":
                 victim.setRescued(False)
@@ -154,20 +152,7 @@ def index(request):
                 victim.setRescued(True)
                 response += "END We are glad that you safe now\n"
 
-            elif text[0] == '2':
-                textlist=text.split('*')
-                idx=textlist.count('1')-textlist.count('0')
-                if idx==len(updates)-1:
-                    response+="END "
-                else:
-                    response+="CON "
-                response+=updateslist[idx].message
-                response+="\n"
-                if idx!=len(updates)-1:
-                    response+="Press 1 for next\n"
-                if idx!=0:
-                    response+="Press 0 for back\n"
-            elif text[0] == "3":
+            elif text[0] == "2":
                 volunteers=sortlocations(victim.lat,victim.lon,list(Volunteer.objects.all()))
                 textlist=text.split('*')
                 idx=textlist.count('9')-textlist.count('7')

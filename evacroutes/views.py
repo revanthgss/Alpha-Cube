@@ -1,13 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from ussd.models import Victim
+from django.shortcuts import redirect
+from ussd.models import Victim, Volunteer
+from ussd.utilities.SMS import SMS
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from .models import Update
 
 # Create your views here.
+@csrf_exempt
 def index(request):
-    victims = Victim.objects.filter(rescued=False)
+    if request.method=='POST':
+        phone=request.POST.get('phone_number')
+        victim=list(Victim.objects.filter(phone_number=phone))[0]
+        victim.setRescued(True)
+        victim.save()
+    victims = Victim.objects.all()
     return render(request, 'evacroutes/map.html', {'victims':list(victims)})
 
 def home(request):
@@ -22,7 +30,13 @@ def post(request):
         u = request.POST.get('update')
         update = Update(message = u)
         update.save()
-        return HttpResponse("Success")
+        victims=Victim.objects.all()
+        recipients=["+"+str(victim.phone_number) for victim in list(victims)]
+        recipients.extend(["+"+str(volunteer.phone_number) for volunteer in list(Volunteer.objects.all())])
+        message="Update on Disaster\n"
+        message+=u
+        SMS().send_sms_sync(recipients=recipients,message=message)
+        return redirect('/')
     else:
         return HttpResponse("Fail")
 

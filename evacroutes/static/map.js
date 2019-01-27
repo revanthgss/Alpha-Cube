@@ -4,8 +4,8 @@ function GetMap() {
     let victims = content.querySelectorAll('.victim');
     map = new Microsoft.Maps.Map('#myMap', {
         credentials: 'Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ',
-        center: new Microsoft.Maps.Location(10.453101, 76.580074),
-        zoom: 7,
+        center: new Microsoft.Maps.Location(18.0056, 79.5572),
+        zoom: 11,
         mapTypeId: Microsoft.Maps.MapTypeId.aerial,
     });
     tooltipTemplate = `<div id="tooltip"><p><b>{title}</b></p><p>{time}</p></div>`;
