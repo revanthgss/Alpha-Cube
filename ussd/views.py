@@ -103,6 +103,7 @@ def sms(request):
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
             message=text[6:]
             message+= "\n- "+str(volunteer.phone_number)
+            SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:4]=="HELP":
             victim=list(Victim.objects.filter(phone_number=fro))[0]
             recipients=["+"+str(victim.volunteer.phone_number)]
