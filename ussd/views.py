@@ -148,8 +148,8 @@ def index(request):
                 response += "along with your pincode"
             
             elif text == "1*2":
-                victim.save()
                 victim.setRescued(True)
+                victim.save()
                 response += "END We are glad that you safe now\n"
 
             elif text[0] == "2":
