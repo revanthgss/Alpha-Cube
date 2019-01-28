@@ -20,7 +20,7 @@ def index(request):
 
 def home(request):
     return render(request, 'evacroutes/home.html')
-
+@csrf_exempt
 def form(request):
     if request.method == 'POST':
         print("HEllo")
