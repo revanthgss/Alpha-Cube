@@ -137,6 +137,7 @@
       </nav>
 <div class="form-style-5 text-center" style="margin-top: 80px;">
 <form action="/form/post/" method="POST">
+  {% csrf_token %}
   <fieldset>
   <legend>Update</legend>
   <textarea name="update" placeholder="Enter Updates Here"></textarea>     
