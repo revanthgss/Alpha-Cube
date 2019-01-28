@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'brahmastra.azurewebsites.net',
     '127.0.0.1',
-    '192.168.43.118'
+    '192.168.43.118',
+    '10.42.0.251'
 ]
 
 

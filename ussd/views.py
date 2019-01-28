@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .utilities.SMS import SMS
-from .utilities.location import sortlocations
+from .utilities.location import sortlocations,reversegeocode
 from .models import Victim, Volunteer
 from evacroutes.models import Update
 import requests
@@ -80,7 +80,7 @@ def sms(request):
         if text[:5]!="ALERT" and text[:4]!="HELP":
             query=text.replace(' ', '%20')
             key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
-            url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
+            url='http://dev.virtualearth.net/REST/v1/L ocations?q='+query+'&o=json&key='+key
             result=requests.get(url)
             result=result.json()
             lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
@@ -112,6 +112,9 @@ def sms(request):
             SMS().send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
+            for victim in list(Victim.objects.all()):
+                victim.assign(sortlocations(victim.lat,victim.lon,[victim.volunteer,volunteer])[0])
+                victim.save()
             volunteer.save()
         return HttpResponse("Success")
 
@@ -186,3 +189,43 @@ def index(request):
         return HttpResponse(response)
     else:
         return HttpResponse("Response could not be made")
+@csrf_exempt
+def location(request):
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone_number')
+        lat = request.POST.get('lat')
+        lon = request.POST.get('lon')
+        victim = Victim.objects.filter(phone_number=phone_number)
+        location=reversegeocode(lat,lon)
+        if(victim):
+            victim=list(victim)[0]
+            victim.updateLocation(lat=float(lat),lon=float(lon),location=location)
+        else:
+            victim=Victim(phone_number=phone_number, lat=float(lat),lon=float(lon),rescued=False,location=location)
+        volunteer=sortlocations(victim.lat,victim.lon,list(Volunteer.objects.all()))[0]
+        victim.assign(volunteer=volunteer)
+        victim.save()
+        recipients=["+"+str(victim.phone_number)]
+        message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. Go to USSD *384*3833# to cancel request for help"
+        SMS().send_sms_sync(recipients=recipients,message=message)
+        return HttpResponse("SUCCESS")
+
+@csrf_exempt
+def locationv(request):
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone_number')
+        lat = request.POST.get('lat')
+        lon = request.POST.get('lon')
+        volunteer = Volunteer.objects.filter(phone_number=phone_number)
+        location=reversegeocode(lat,lon)
+        if(volunteer):
+            volunteer=list(volunteer)[0]
+            volunteer.updateLocation(lat=float(lat),lon=float(lon),location=location)
+            volunteer.save()
+        else:
+            volunteer = Volunteer(lat=float(lat),lon=float(lon),phone_number=phone_number,location=location)
+            volunteer.save()
+        for victim in list(Victim.objects.all()):
+            victim.assign(sortlocations(victim.lat,victim.lon,[victim.volunteer,volunteer])[0])
+            victim.save()
+        return HttpResponse("SUCCESS")
