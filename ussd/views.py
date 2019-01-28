@@ -46,7 +46,7 @@ def ussdrelief(request):
                         response+=str(victims[idx].phone_number)
                         response+=" "
                         response+=victims[idx].location
-                        response+="\nPress 5 to indicate victim has rescued\n"
+                        response+="\nPress 5 to indicate victim has been rescued\n"
                         if idx!=len(victims)-1:
                             response+="Press 1 to for next\n"
                         if idx!=0:
@@ -162,7 +162,7 @@ def index(request):
                     victim.assign(volunteers[idx])
                     victim.save()
                     response+="END You have been assigned\n"
-                    response+="volunteer at "+volunteers[idx].location+".Phone Number: "+volunteers[idx].phone_number+" You can ask\n"
+                    response+="volunteer at "+volunteers[idx].location+".Phone Number: "+str(volunteers[idx].phone_number)+" You can ask\n"
                     response+="for help by sending HELP message\n"
                     response+="to 86387\n"
                     return HttpResponse(response)
@@ -172,7 +172,7 @@ def index(request):
                     response+=str(volunteers[idx].phone_number)
                     response+=" "
                     response+=volunteers[idx].location
-                    response+="\nPress 5 to ask help or reach the shelter\n"
+                    response+="\nPress 5 for help or reach the shelter\n"
                     if idx!=len(volunteers)-1:
                         response+="Press 9 for next\n"
                     if idx!=0:
@@ -185,4 +185,4 @@ def index(request):
 
         return HttpResponse(response)
     else:
-        return HttpResponse("Response can't be made")
+        return HttpResponse("Response could not be made")
