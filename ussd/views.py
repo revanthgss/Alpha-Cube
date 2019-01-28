@@ -158,10 +158,11 @@ def index(request):
                 textlist=text.split('*')
                 idx=textlist.count('9')-textlist.count('7')
                 if text[-1]=='5':
-                    print("hello")
+                    victim.setRescued(False)
                     victim.assign(volunteers[idx])
+                    victim.save()
                     response+="END You have been assigned\n"
-                    response+="volunteer at "+volunteers[idx].location+". You can ask\n"
+                    response+="volunteer at "+volunteers[idx].location+".Phone Number: "+volunteers[idx].phone_number+" You can ask\n"
                     response+="for help by sending HELP message\n"
                     response+="to 86387\n"
                     return HttpResponse(response)
