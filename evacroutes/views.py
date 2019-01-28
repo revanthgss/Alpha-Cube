@@ -15,7 +15,7 @@ def index(request):
         victim=list(Victim.objects.filter(phone_number=phone))[0]
         victim.setRescued(True)
         victim.save()
-    victims = Victim.objects.all()
+    victims = Victim.objects.all().order_by('reported_date')
     return render(request, 'evacroutes/map.html', {'victims':list(victims)})
 
 def home(request):

@@ -39,7 +39,7 @@ def ussdrelief(request):
                     if idx==len(victims):
                         response+="END The list has ended\n"
                     elif idx==len(victims)-1:
-                        response+="END "
+                        response+="CON "
                     else:
                         response+="CON "
                     if idx!=len(victims):

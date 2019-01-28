@@ -67,6 +67,7 @@
                             <input type="text" name="phone_number" value={{ victim.phone_number }} hidden>
                             <p>{{ victim.location }}</p>
                             <input type="text" name="location" value={{ victim.location }} hidden>
+                            <p>{{ victim.reported_date|timesince }} ago</p>
                             {% if victim.rescued %}
                             <p class="text-success">Rescued</p>
                             {% else %}
