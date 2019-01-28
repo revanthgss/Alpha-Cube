@@ -33,7 +33,7 @@ def form(request):
         message="Update on Disaster\n"
         message+=u
         SMS().send_sms_sync(recipients=recipients,message=message)
-        return HttpResponse("Success")
+        return redirect("/")
     return render(request, 'evacroutes/form.html')
 
 def about(request):
