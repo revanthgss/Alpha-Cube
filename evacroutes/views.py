@@ -22,11 +22,8 @@ def home(request):
     return render(request, 'evacroutes/home.html')
 
 def form(request):
-    return render(request, 'evacroutes/form.html')
-
-@csrf_exempt
-def post(request):
     if request.method == 'POST':
+        print("HEllo")
         u = request.POST.get('update')
         update = Update(message = u)
         update.save()
@@ -36,9 +33,8 @@ def post(request):
         message="Update on Disaster\n"
         message+=u
         SMS().send_sms_sync(recipients=recipients,message=message)
-        return redirect('/')
-    else:
-        return HttpResponse("Fail")
+        return HttpResponse("Success")
+    return render(request, 'evacroutes/form.html')
 
 def about(request):
     return render(request, 'evacroutes/about.html')

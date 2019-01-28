@@ -136,13 +136,12 @@
         </div>
       </nav>
 <div class="form-style-5 text-center" style="margin-top: 80px;">
-<form action="/form/post/" method="POST">
-  {% csrf_token %}
+<form action="/form/" method="POST">
   <fieldset>
   <legend>Update</legend>
   <textarea name="update" placeholder="Enter Updates Here"></textarea>     
   </fieldset>
-  <button class="btn btn-success" type="submit">Submit</button>
+  <input class="btn btn-success" type="submit" value="Submit"/>
 </form>
 </div>
 </body>
