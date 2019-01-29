@@ -5,6 +5,7 @@ from .utilities.location import sortlocations,reversegeocode
 from .models import Victim, Volunteer
 from evacroutes.models import Update
 import requests
+import time
 
 
 @csrf_exempt
@@ -100,6 +101,7 @@ def sms(request):
             victim.save()
             recipients=["+"+str(victim.phone_number)]
             message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. To cancel request go to our ussd code"
+            time.sleep(2)
             s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
             volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
@@ -107,12 +109,14 @@ def sms(request):
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
             message=text[6:]
             message+= "\n- "+str(volunteer.phone_number)
+            time.sleep(2)
             s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:4]=="HELP":
             victim=list(Victim.objects.filter(phone_number=fro))[0]
             recipients=["+"+str(victim.volunteer.phone_number)]
             message=text[5:]
             message+= "\n- "+str(victim.phone_number)
+            time.sleep(2)
             s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
@@ -212,6 +216,7 @@ def location(request):
         victim.assign(volunteer=volunteer)
         victim.save()
         recipients=["+"+str(victim.phone_number)]
+        time.sleep(2)
         message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. Go to USSD *384*3833# to cancel request for help"
         s.send_sms_sync(recipients=recipients,message=message)
         return HttpResponse("SUCCESS")
