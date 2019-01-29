@@ -6,10 +6,10 @@ from .models import Victim, Volunteer
 from evacroutes.models import Update
 import requests
 
-sms=SMS()
 
 @csrf_exempt
 def ussdrelief(request):
+    s=SMS()
     if request.method == 'POST':
         session_id = request.POST.get('sessionId')
         service_code = request.POST.get('serviceCode')
@@ -73,6 +73,8 @@ def ussdrelief(request):
 
 @csrf_exempt
 def sms(request):
+    
+    s=SMS()
     if request.method == 'POST':
         fro = request.POST.get('from')
         to = request.POST.get('to')
@@ -98,20 +100,20 @@ def sms(request):
             victim.save()
             recipients=["+"+str(victim.phone_number)]
             message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. To cancel request go to our ussd code"
-            sms.send_sms_sync(recipients=recipients,message=message)
+            s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
             volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
             victims=Victim.objects.filter(volunteer=volunteer)
             recipients=["+"+str(victim.phone_number) for victim in list(victims)]
             message=text[6:]
             message+= "\n- "+str(volunteer.phone_number)
-            sms.send_sms_sync(recipients=recipients,message=message)
+            s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:4]=="HELP":
             victim=list(Victim.objects.filter(phone_number=fro))[0]
             recipients=["+"+str(victim.volunteer.phone_number)]
             message=text[5:]
             message+= "\n- "+str(victim.phone_number)
-            sms.send_sms_sync(recipients=recipients,message=message)
+            s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387":
             volunteer=Volunteer(phone_number=fro,lat=lat,lon=lon,location=text)
             for victim in list(Victim.objects.all()):
@@ -122,6 +124,7 @@ def sms(request):
 
 @csrf_exempt
 def index(request):
+    s=SMS()
     if request.method == 'POST':
         session_id = request.POST.get('sessionId')
         service_code = request.POST.get('serviceCode')
@@ -194,6 +197,7 @@ def index(request):
 @csrf_exempt
 def location(request):
     if request.method == 'POST':
+        s=SMS()
         phone_number = request.POST.get('phone_number')
         lat = request.POST.get('lat')
         lon = request.POST.get('lon')
@@ -209,12 +213,13 @@ def location(request):
         victim.save()
         recipients=["+"+str(victim.phone_number)]
         message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. Go to USSD *384*3833# to cancel request for help"
-        sms.send_sms_sync(recipients=recipients,message=message)
+        s.send_sms_sync(recipients=recipients,message=message)
         return HttpResponse("SUCCESS")
 
 @csrf_exempt
 def locationv(request):
     if request.method == 'POST':
+        s=SMS()
         phone_number = request.POST.get('phone_number')
         lat = request.POST.get('lat')
         lon = request.POST.get('lon')
