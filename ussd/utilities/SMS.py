@@ -12,7 +12,7 @@ class SMS:
         self.sms = africastalking.SMS
 
     def send_sms_sync(self, recipients, message):
-        sender="86386"
+        sender="86387"
         enqueue=True
         try:
             # That’s it, hit send and we’ll take care of the rest
