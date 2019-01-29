@@ -80,7 +80,7 @@ def sms(request):
         if text[:5]!="ALERT" and text[:4]!="HELP":
             query=text.replace(' ', '%20')
             key='Aqxws6GyR0KaQH-uo9w92nqNeePHAzsbkVDbrpiayIiAwfTbXcML-wj1XLEBPQcQ'
-            url='http://dev.virtualearth.net/REST/v1/L ocations?q='+query+'&o=json&key='+key
+            url='http://dev.virtualearth.net/REST/v1/Locations?q='+query+'&o=json&key='+key
             result=requests.get(url)
             result=result.json()
             lat,lon=result['resourceSets'][0]['resources'][0]['point']['coordinates']
@@ -135,7 +135,7 @@ def index(request):
             updateslist = list(updates)
             if text == "":
                 response = "CON What do you want to do\n"
-                response += "1. Ask for support\n"
+                response += "1. Support Services\n"
                 response += "2. Reach a Shelter\n"
 
             elif text == "1":
