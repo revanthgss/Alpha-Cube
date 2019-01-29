@@ -30,8 +30,10 @@ class Victim(models.Model):
         self.lat=lat
         self.lon=lon
         self.location=location
+        self.reported_date=timezone.now
 
     def assign(self,volunteer):
         self.volunteer=volunteer
+
     def __str__(self):
         return str(self.id)
