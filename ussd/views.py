@@ -100,7 +100,7 @@ def sms(request):
             victim.assign(volunteer=volunteer)
             victim.save()
             recipients=["+"+str(victim.phone_number)]
-            message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. To cancel request go to our ussd code"
+            message="You have been assigned volunteer at "+volunteer.location+". His number is "+str(volunteer.phone_number)+". For help, send \"HELP message\" to 86387. To cancel request go to our ussd code *384*3833#"
             s.send_sms_sync(recipients=recipients,message=message)
         elif to=="86387" and text[:5]=="ALERT":
             volunteer=list(Volunteer.objects.filter(phone_number=fro))[0]
