@@ -51,9 +51,9 @@ def ussdrelief(request):
                         response+=victims[idx].location
                         response+="\nPress 5 to indicate victim has been rescued\n"
                         if idx!=len(victims)-1:
-                            response+="Press 1 to for next\n"
+                            response+="Press 1 for next\n"
                         if idx!=0:
-                            response+="Press 0 to for back\n"
+                            response+="Press 0 for back\n"
                 else:
                     response+="END No nearby victim"
                 
